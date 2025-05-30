@@ -1,0 +1,45 @@
+# --- FRONTEND: React ---
+cyberporton-front/node_modules/
+cyberporton-front/build/
+cyberporton-front/.env
+cyberporton-front/.DS_Store
+cyberporton-front/npm-debug.log
+cyberporton-front/yarn-debug.log
+cyberporton-front/yarn-error.log
+
+# Editor config
+cyberporton-front/.vscode/
+
+# --- BACKEND: .NET (Visual Studio) ---
+CyberPorton_API/bin/
+CyberPorton_API/obj/
+CyberPorton_API/.vs/
+CyberPorton_API/*.user
+CyberPorton_API/*.suo
+CyberPorton_API/*.csproj.user
+CyberPorton_API/*.dbmdl
+CyberPorton_API/*.pdb
+CyberPorton_API/*.cache
+CyberPorton_API/*.log
+CyberPorton_API/*.vsidx
+CyberPorton_API/*.dll
+CyberPorton_API/*.exe
+
+# --- SISTEMA (Windows/macOS) ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# --- GLOBAL ---
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.tgz
+*.gz
+*.zip
+
+# JetBrains (Rider)
+.idea/
