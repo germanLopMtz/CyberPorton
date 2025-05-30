@@ -23,22 +23,25 @@ builder.Services.AddScoped<IPagoService, PagoService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000") 
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); 
+    });
 });
+
 
 
 
 var app = builder.Build();
 
 app.UseCors("ReactPolicy");
+
+app.UseCors("AllowReactApp");
+
 
 
 // Configure the HTTP request pipeline.

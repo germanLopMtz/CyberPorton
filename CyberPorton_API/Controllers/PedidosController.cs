@@ -39,8 +39,9 @@ namespace CyberPorton_API.Controllers
             return Ok(pedidos);
         }
 
+
         // GET: api/pedidos/5
-        [HttpGet("{id}")]
+        [HttpGet("{usuarioId}/{id}")]
         public async Task<IActionResult> ObtenerPedidoPorId(int id)
         {
             var pedido = await _pedidoService.ObtenerPedidoPorIdAsync(id);

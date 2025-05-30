@@ -6,10 +6,9 @@ import './Register.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    nombreCompleto: '',
+    correoElectronico: '',
+    contrasena: '',
     direccion: '',
     telefono: '',
   });
@@ -28,16 +27,12 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
+
 
     const userData = {
-      nombre: formData.nombre,
-      email: formData.email,
-      password: formData.password,
+      nombreCompleto: formData.nombreCompleto,
+      correoElectronico: formData.correoElectronico,
+      contrasena: formData.contrasena,
       direccion: formData.direccion,
       telefono: formData.telefono,
     };
@@ -64,9 +59,9 @@ const Register = () => {
             <label htmlFor="nombre">Nombre Completo</label>
             <input
               type="text"
-              id="nombre"
-              name="nombre"
-              value={formData.nombre}
+              id="nombreCompleto"
+              name="nombreCompleto"
+              value={formData.nombreCompleto}
               onChange={handleChange}
               required
             />
@@ -76,9 +71,9 @@ const Register = () => {
             <label htmlFor="email">Correo Electrónico</label>
             <input
               type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              id="correoElectronico"
+              name="correoElectronico"
+              value={formData.correoElectronico}
               onChange={handleChange}
               required
             />
@@ -88,28 +83,16 @@ const Register = () => {
             <label htmlFor="password">Contraseña</label>
             <input
               type="password"
-              id="password"
-              name="password"
-              value={formData.password}
+              id="contrasena"
+              name="contrasena"
+              value={formData.contrasena}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>
+            <label htmlFor="direccion">Dirección</label>        
             <input
               type="text"
               id="direccion"

@@ -13,6 +13,7 @@ import Register from './pages/Register';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import Checkout from './pages/Checkout';
+import CreateProduct from './pages/CreateProduct';
 
 // Componentes
 import Navbar from './components/Navbar';
@@ -29,6 +30,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/productos" element={<ProductList />} />
               <Route path="/productos/:id" element={<ProductDetail />} />
+              <Route path="/productos/crear" element={<CreateProduct />} />
               <Route path="/carrito" element={<Cart />} />
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Register />} />

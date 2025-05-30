@@ -1,5 +1,5 @@
-.register-container {
-  max-width: 600px;
+.create-product-container {
+  max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: #ffffff;
@@ -7,13 +7,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.register-container h2 {
+.create-product-container h2 {
   text-align: center;
   color: #333;
   margin-bottom: 2rem;
 }
 
-.register-form {
+.create-product-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -30,17 +30,17 @@
   color: #555;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .submit-button {
@@ -62,35 +62,4 @@
 .submit-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
-}
-
-.error-message {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.login-link {
-  text-align: center;
-  margin-top: 1.5rem;
-  color: #666;
-}
-
-.login-link a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 576px) {
-  .register-form {
-    padding: 1.5rem;
-  }
 } 

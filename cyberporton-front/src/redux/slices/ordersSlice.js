@@ -5,7 +5,7 @@ import { API_URL, getAuthHeaders } from '../../config';
 export const createOrder = createAsyncThunk(
   'orders/create',
   async (orderData) => {
-    const response = await axios.post(`${API_URL}/pedidos`, orderData, { headers: getAuthHeaders() });
+    const response = await axios.post(`${API_URL}/Pedidos`, orderData, { headers: getAuthHeaders() });
     return response.data;
   }
 );
@@ -13,7 +13,7 @@ export const createOrder = createAsyncThunk(
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
   async (userId) => {
-    const response = await axios.get(`${API_URL}/pedidos/usuario/${userId}`, { headers: getAuthHeaders() });
+    const response = await axios.get(`${API_URL}/Pedidos/${Id}`, { headers: getAuthHeaders() });
     return response.data;
   }
 );
