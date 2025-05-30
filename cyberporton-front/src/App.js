@@ -14,32 +14,45 @@ import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import Checkout from './pages/Checkout';
 import CreateProduct from './pages/CreateProduct';
+import CreateCategory from './pages/CreateCategory';
+import EditProduct from './pages/EditProduct';
 
 // Componentes
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CategoryList from './components/CategoryList';
+import Sidebar from './components/Sidebar';
+
+import './App.css';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/productos" element={<ProductList />} />
-              <Route path="/productos/:id" element={<ProductDetail />} />
-              <Route path="/productos/crear" element={<CreateProduct />} />
-              <Route path="/carrito" element={<Cart />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/registro" element={<Register />} />
-              <Route path="/pedidos" element={<Orders />} />
-              <Route path="/pedidos/:id" element={<OrderDetail />} />
-              <Route path="/checkout" element={<Checkout />} />
-            </Routes>
-          </main>
-          <Footer />
+          <Sidebar />
+          <div className="main-content-with-sidebar">
+            <Navbar />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/categorias" element={<CategoryList />} />
+                <Route path="/categorias/crear" element={<CreateCategory />} />
+                <Route path="/productos" element={<ProductList />} />
+                <Route path="/productos/categoria/:categoriaId" element={<ProductList />} />
+                <Route path="/productos/:id" element={<ProductDetail />} />
+                <Route path="/productos/crear" element={<CreateProduct />} />
+                <Route path="/productos/editar/:id" element={<EditProduct />} />
+                <Route path="/carrito" element={<Cart />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/registro" element={<Register />} />
+                <Route path="/pedidos" element={<Orders />} />
+                <Route path="/pedidos/:id" element={<OrderDetail />} />
+                <Route path="/checkout" element={<Checkout />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </div>
       </Router>
     </Provider>

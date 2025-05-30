@@ -109,6 +109,27 @@ namespace CyberPorton_API.Infraestructure.API_Services
             await _context.SaveChangesAsync();
             return true;
         }
-    }
 
-}
+        public async Task<List<ProductoOutputDTO>> GetByCategoriaAsync(int categoriaId)
+        {
+            var productos = await _context.Productos
+                .Where(p => p.CategoriaId == categoriaId)
+                .Include(p => p.Categoria)
+                .ToListAsync();
+
+            return productos.Select(p => new ProductoOutputDTO
+            {
+                Id = p.Id,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                Precio = p.Precio,
+                Stock = p.Stock,
+                ImagenUrl = p.ImagenUrl,
+                CategoriaId = p.CategoriaId,
+                CategoriaNombre = p.Categoria.Nombre
+            }).ToList();
+
+        }
+
+    }
+    }

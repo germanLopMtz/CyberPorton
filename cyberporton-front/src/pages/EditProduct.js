@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import apiService from '../services/api';
-import './CreateProduct.css';
+import './EditProduct.css'; // Asegúrate de crear este archivo CSS
 
-function CreateProduct() {
+function EditProduct() {
+    const { id } = useParams(); // Obtiene el ID del producto de la URL
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nombre: '',
@@ -14,15 +15,51 @@ function CreateProduct() {
         categoriaId: ''
     });
     const [categorias, setCategorias] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Cargar categorías al montar el componente
-        apiService.getCategorias().then(res => {
-            setCategorias(res.data);
-        }).catch(() => setCategorias([]));
-    }, []);
+        // Cargar el producto y las categorías al montar el componente
+        const cargarDatos = async () => {
+            try {
+                setLoading(true);
+                const [productoResponse, categoriasResponse] = await Promise.all([
+                    apiService.getProductoById(id),
+                    apiService.getCategorias()
+                ]);
+
+                if (productoResponse && productoResponse.data) {
+                    const productoData = productoResponse.data;
+                    setFormData({
+                        nombre: productoData.nombre,
+                        descripcion: productoData.descripcion,
+                        precio: productoData.precio.toString(), // Convertir a string para input type="number"
+                        stock: productoData.stock.toString(),     // Convertir a string para input type="number"
+                        imagenUrl: productoData.imagenUrl,
+                        categoriaId: productoData.categoriaId.toString() // Convertir a string para el select value
+                    });
+                    setError(null);
+                } else {
+                    throw new Error('Producto no encontrado o respuesta inesperada');
+                }
+
+                 if (categoriasResponse && categoriasResponse.data) {
+                    setCategorias(categoriasResponse.data);
+                } else {
+                    // Manejar caso sin categorías (opcional)
+                    setCategorias([]);
+                 }
+
+            } catch (err) {
+                console.error('Error al cargar datos:', err);
+                setError(err.response?.data?.message || 'Error al cargar los datos del producto');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        cargarDatos();
+    }, [id]); // Dependencia del ID para recargar si cambia
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,25 +75,53 @@ function CreateProduct() {
         setError(null);
 
         try {
-            await apiService.createProducto({
+            // Asegúrate de que los campos numéricos sean números antes de enviar
+            const dataToSend = {
                 ...formData,
+                precio: parseFloat(formData.precio),
+                stock: parseInt(formData.stock, 10),
                 categoriaId: parseInt(formData.categoriaId, 10)
-            });
-            navigate('/productos'); // Redirige a la lista de productos
+            };
+            
+            await apiService.updateProducto(id, dataToSend);
+            alert('Producto actualizado con éxito!');
+            navigate(`/productos/${id}`); // Redirige de vuelta a la página de detalles
+
         } catch (err) {
-            setError('Error al crear el producto');
-            console.error('Error:', err);
+            console.error('Error al actualizar el producto:', err);
+            setError(err.response?.data?.message || 'Error al actualizar el producto');
         } finally {
             setLoading(false);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="loading">
+                <h2>Cargando producto para editar...</h2>
+                <p>Por favor espere...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="error">
+                <h2>Error</h2>
+                <p>{error}</p>
+                <button onClick={() => navigate(`/productos/${id}`)}>
+                    Volver a Detalles
+                </button>
+            </div>
+        );
+    }
+
     return (
-        <div className="create-product-container">
-            <h1>Crear Nuevo Producto</h1>
+        <div className="edit-product-container">
+            <h1>Editar Producto</h1>
             {error && <div className="error-message">{error}</div>}
             
-            <form onSubmit={handleSubmit} className="create-product-form">
+            <form onSubmit={handleSubmit} className="edit-product-form">
                 <div className="form-group">
                     <label htmlFor="nombre">Nombre:</label>
                     <input
@@ -89,6 +154,7 @@ function CreateProduct() {
                         value={formData.precio}
                         onChange={handleChange}
                         required
+                        step="0.01"
                     />
                 </div>
 
@@ -116,7 +182,7 @@ function CreateProduct() {
                     />
                 </div>
 
-                <div className="form-group">
+                 <div className="form-group">
                     <label htmlFor="categoriaId">Categoría:</label>
                     <select
                         id="categoriaId"
@@ -137,11 +203,18 @@ function CreateProduct() {
                     className="submit-button"
                     disabled={loading}
                 >
-                    {loading ? 'Creando...' : 'Crear Producto'}
+                    {loading ? 'Guardando...' : 'Guardar Cambios'}
+                </button>
+                 <button 
+                    type="button" 
+                    className="cancel-button"
+                     onClick={() => navigate(`/productos/${id}`)}
+                >
+                    Cancelar
                 </button>
             </form>
         </div>
     );
 }
 
-export default CreateProduct; 
+export default EditProduct; 

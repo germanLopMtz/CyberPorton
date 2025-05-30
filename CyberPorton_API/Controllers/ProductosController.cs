@@ -69,5 +69,16 @@ namespace CyberPorton_API.Controllers
 
             return NoContent();
         }
+
+        // GET: api/Productos/categoria/5
+        [HttpGet("categoria/{categoriaId}")]
+        public async Task<ActionResult<List<ProductoOutputDTO>>> GetByCategoria(int categoriaId)
+        {
+            var productos = await _productoService.GetByCategoriaAsync(categoriaId);
+            if (productos == null || productos.Count == 0)
+                return NotFound("No hay productos para esta categoría.");
+
+            return Ok(productos);
+        }
     }
 }

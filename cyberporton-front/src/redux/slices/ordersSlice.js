@@ -12,8 +12,8 @@ export const createOrder = createAsyncThunk(
 
 export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
-  async (userId) => {
-    const response = await axios.get(`${API_URL}/Pedidos/${Id}`, { headers: getAuthHeaders() });
+  async () => {
+    const response = await axios.get(`${API_URL}/Pedidos`, { headers: getAuthHeaders() });
     return response.data;
   }
 );
