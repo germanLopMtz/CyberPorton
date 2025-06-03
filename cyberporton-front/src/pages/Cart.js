@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
     agregarAlCarrito, 
     quitarDelCarrito, 
@@ -11,6 +11,7 @@ import './Cart.css';
 
 function Cart() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { items, total, cantidad } = useSelector(state => state.cart);
 
     const handleAgregar = (producto) => {
@@ -78,7 +79,10 @@ function Cart() {
                         <span>Total a Pagar:</span>
                         <span>${total.toFixed(2)}</span>
                     </div>
-                    <button className="checkout-button">
+                    <button
+                        className="checkout-button"
+                        onClick={() => navigate('/checkout')}
+                    >
                         Proceder al Pago
                     </button>
                     <button className="clear-cart" onClick={handleLimpiar}>
@@ -90,4 +94,4 @@ function Cart() {
     );
 }
 
-export default Cart; 
+export default Cart;

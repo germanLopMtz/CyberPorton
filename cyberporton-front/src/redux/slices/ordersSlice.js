@@ -21,7 +21,7 @@ export const fetchUserOrders = createAsyncThunk(
 const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
-    orders: [],
+    ordersList: [],
     currentOrder: null,
     status: 'idle',
     error: null,

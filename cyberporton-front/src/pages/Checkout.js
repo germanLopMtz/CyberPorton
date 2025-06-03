@@ -16,8 +16,10 @@ function Checkout() {
         codigoPostal: '',
         telefono: ''
     });
+    const [metodoPago, setMetodoPago] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -38,31 +40,35 @@ function Checkout() {
             setLoading(true);
             setError(null);
 
+            // Solo usuarioId y detalles
             const pedidoData = {
                 usuarioId: user.id,
-                items: items.map(item => ({
+                detalles: items.map(item => ({
                     productoId: item.id,
-                    cantidad: item.cantidad,
-                    precio: item.precio
-                })),
-                total: total,
-                direccion: formData.direccion,
-                ciudad: formData.ciudad,
-                codigoPostal: formData.codigoPostal,
-                telefono: formData.telefono
+                    cantidad: item.cantidad
+                }))
             };
 
-            const response = await apiService.crearPedido(pedidoData);
-            
-            if (response && response.data) {
+            const pedidoResponse = await apiService.crearPedido(pedidoData);
+
+            if (pedidoResponse && pedidoResponse.data && pedidoResponse.data.id) {
+                const pagoData = {
+                    pedidoId: pedidoResponse.data.id,
+                    metodoPago: metodoPago,
+                    monto: total
+                };
+                await apiService.createPago(pagoData);
+
                 dispatch(limpiarCarrito());
-                navigate(`/pedidos/${response.data.id}`);
+                setSuccess(true);
+                setTimeout(() => {
+                    navigate('/pedidos');
+                }, 2000);
             } else {
                 throw new Error('Error al procesar el pedido');
             }
         } catch (err) {
-            console.error('Error al procesar el pedido:', err);
-            setError(err.response?.data?.message || 'Error al procesar el pedido');
+            setError(err.response?.data?.mensaje || 'Error al procesar el pedido');
         } finally {
             setLoading(false);
         }
@@ -96,6 +102,13 @@ function Checkout() {
         <div className="checkout-container">
             <h1>Finalizar Compra</h1>
             <div className="checkout-content">
+                {success ? (
+                    <div className="success-message">
+                        <span role="img" aria-label="check" style={{fontSize: '2rem'}}>✅</span>
+                        <p>¡Pago realizado con éxito! Redirigiendo a tus pedidos...</p>
+                    </div>
+                ) : (
+                <>
                 <form onSubmit={handleSubmit} className="checkout-form">
                     <h2>Información de Envío</h2>
                     <div className="form-group">
@@ -142,6 +155,21 @@ function Checkout() {
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="metodoPago">Método de Pago:</label>
+                        <select
+                            id="metodoPago"
+                            name="metodoPago"
+                            value={metodoPago}
+                            onChange={e => setMetodoPago(Number(e.target.value))}
+                            required
+                        >
+                            <option value={1}>Tarjeta de Crédito</option>
+                            <option value={2}>Tarjeta de Débito</option>
+                            <option value={3}>Paypal</option>
+                            <option value={4}>OXXO</option>
+                        </select>
+                    </div>
 
                     {error && (
                         <div className="error-message">
@@ -154,7 +182,7 @@ function Checkout() {
                         className="submit-button"
                         disabled={loading}
                     >
-                        {loading ? 'Procesando...' : 'Confirmar Pedido'}
+                        {loading ? 'Procesando...' : 'Confirmar Pedido y Pagar'}
                     </button>
                 </form>
 
@@ -173,9 +201,11 @@ function Checkout() {
                         <span>${total.toFixed(2)}</span>
                     </div>
                 </div>
+                </>
+                )}
             </div>
         </div>
     );
 }
 
-export default Checkout; 
+export default Checkout;

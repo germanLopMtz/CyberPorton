@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://localhost:7297/api'; // Ajusta esto según tu puerto de backend
+const API_URL = 'http://localhost:5018/api'; // Ajusta esto según tu puerto de backend
 
 // Configuración base de axios
 const api = axios.create({
@@ -90,4 +90,5 @@ export const apiService = {
     deletePago: (id) => api.delete(`/Pagos/${id}`),
 };
 
-export default apiService; 
+export default apiService;
+

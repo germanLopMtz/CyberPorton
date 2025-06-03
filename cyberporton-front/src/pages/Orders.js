@@ -15,6 +15,8 @@ const Orders = () => {
     }
   }, [dispatch, user]);
 
+  const ordersList = Array.isArray(orders) ? orders : [];
+
   if (!user) {
     return (
       <div className="orders-container">
@@ -44,7 +46,7 @@ const Orders = () => {
     );
   }
 
-  if (orders.length === 0) {
+  if (ordersList.length === 0) {
     return (
       <div className="orders-container">
         <div className="no-orders">
@@ -60,9 +62,8 @@ const Orders = () => {
   return (
     <div className="orders-container">
       <h1>Mis Pedidos</h1>
-      
       <div className="orders-list">
-        {orders.map((order) => (
+        {ordersList.map((order) => (
           <div key={order.id} className="order-card">
             <div className="order-header">
               <h3>Pedido #{order.id}</h3>
@@ -72,22 +73,24 @@ const Orders = () => {
             </div>
 
             <div className="order-details">
-              <p>Fecha: {new Date(order.fecha).toLocaleDateString()}</p>
+              <p>Fecha: {new Date(order.fechaPedido).toLocaleDateString()}</p>
               <p>Total: ${order.total.toFixed(2)}</p>
             </div>
 
-            <div className="order-items">
-              {order.items.map((item) => (
-                <div key={item.id} className="order-item">
-                  <img src={item.imagen} alt={item.nombre} />
-                  <div className="item-info">
-                    <h4>{item.nombre}</h4>
-                    <p>Cantidad: {item.cantidad}</p>
-                    <p>Precio: ${item.precio}</p>
+            {Array.isArray(order.detalles) && order.detalles.length > 0 && (
+              <div className="order-items">
+                {order.detalles.map((item, idx) => (
+                  <div key={idx} className="order-item">
+                    <div className="item-info">
+                      <h4>{item.nombreProducto}</h4>
+                      <p>Cantidad: {item.cantidad}</p>
+                      <p>Precio unitario: ${item.precioUnitario}</p>
+                      <p>Subtotal: ${item.subtotal}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             <Link to={`/pedidos/${order.id}`} className="view-order">
               Ver Detalles
@@ -99,4 +102,4 @@ const Orders = () => {
   );
 };
 
-export default Orders; 
+export default Orders;

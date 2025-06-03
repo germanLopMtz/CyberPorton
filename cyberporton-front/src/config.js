@@ -1,5 +1,5 @@
 // Configuración de la API
-export const API_URL = 'https://localhost:7297/api'; // Cambia esto por la URL de tu API
+export const API_URL = 'http://localhost:5018/api'; // Cambia esto por la URL de tu API
 
 // Configuración de axios
 export const axiosConfig = {
