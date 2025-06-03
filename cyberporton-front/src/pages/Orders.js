@@ -6,11 +6,11 @@ import './Orders.css';
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const { orders = [], status, error } = useSelector((state) => state.orders);
+  const { orders, status, error } = useSelector((state) => state.orders);
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.id) {
       dispatch(fetchUserOrders(user.id));
     }
   }, [dispatch, user]);
@@ -44,7 +44,10 @@ const Orders = () => {
     );
   }
 
-  if ((orders ?? []).length === 0) {
+  // Asegurarse de que orders sea un array
+  const ordersList = Array.isArray(orders) ? orders : [];
+
+  if (ordersList.length === 0) {
     return (
       <div className="orders-container">
         <div className="no-orders">
@@ -62,12 +65,12 @@ const Orders = () => {
       <h1>Mis Pedidos</h1>
       
       <div className="orders-list">
-        {(orders ?? []).map((order) => (
+        {ordersList.map((order) => (
           <div key={order.id} className="order-card">
             <div className="order-header">
               <h3>Pedido #{order.id}</h3>
-              <span className={`order-status ${order.estado.toLowerCase()}`}>
-                {order.estado}
+              <span className={`order-status ${(order.estado || '').toLowerCase()}`}>
+                {order.estado || 'Pendiente'}
               </span>
             </div>
 
@@ -76,18 +79,20 @@ const Orders = () => {
               <p>Total: ${order.total.toFixed(2)}</p>
             </div>
 
-            <div className="order-items">
-              {order.items.map((item) => (
-                <div key={item.id} className="order-item">
-                  <img src={item.imagen} alt={item.nombre} />
-                  <div className="item-info">
-                    <h4>{item.nombre}</h4>
-                    <p>Cantidad: {item.cantidad}</p>
-                    <p>Precio: ${item.precio}</p>
+            {Array.isArray(order.items) && order.items.length > 0 && (
+              <div className="order-items">
+                {order.items.map((item) => (
+                  <div key={item.id} className="order-item">
+                    <img src={item.imagen} alt={item.nombre} />
+                    <div className="item-info">
+                      <h4>{item.nombre}</h4>
+                      <p>Cantidad: {item.cantidad}</p>
+                      <p>Precio: ${item.precio}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             <Link to={`/pedidos/${order.id}`} className="view-order">
               Ver Detalles

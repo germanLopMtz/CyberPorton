@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { limpiarCarrito } from '../redux/slices/cartSlice';
-import apiService from '../services/api';
+import { createOrder, fetchUserOrders } from '../redux/slices/ordersSlice';
 import './Checkout.css';
 
 function Checkout() {
@@ -43,27 +43,41 @@ function Checkout() {
                 items: items.map(item => ({
                     productoId: item.id,
                     cantidad: item.cantidad,
-                    precio: item.precio
+                    precio: item.precio,
+                    nombre: item.nombre,
+                    imagen: item.imagenUrl
                 })),
                 total: total,
                 direccion: formData.direccion,
                 ciudad: formData.ciudad,
                 codigoPostal: formData.codigoPostal,
-                telefono: formData.telefono
+                telefono: formData.telefono,
+                estado: 'Pendiente',
+                fecha: new Date().toISOString()
             };
 
-            const response = await apiService.crearPedido(pedidoData);
+            console.log('Datos del pedido a enviar:', pedidoData);
+            console.log('Token de autenticación:', localStorage.getItem('token'));
+
+            const resultAction = await dispatch(createOrder(pedidoData));
+            console.log('Resultado de createOrder:', resultAction);
             
-            if (response && response.data) {
+            if (createOrder.fulfilled.match(resultAction)) {
+                console.log('Pedido creado exitosamente:', resultAction.payload);
                 dispatch(limpiarCarrito());
-                // Redirige a la lista de pedidos, no al detalle
+                
+                console.log('Obteniendo pedidos del usuario...');
+                const ordersResult = await dispatch(fetchUserOrders(user.id));
+                console.log('Resultado de fetchUserOrders:', ordersResult);
+                
                 navigate('/pedidos');
             } else {
-                throw new Error('Error al procesar el pedido');
+                console.error('Error en createOrder:', resultAction);
+                throw new Error(resultAction.payload || 'Error al procesar el pedido');
             }
         } catch (err) {
-            console.error('Error al procesar el pedido:', err);
-            setError(err.response?.data?.message || 'Error al procesar el pedido');
+            console.error('Error detallado al procesar el pedido:', err);
+            setError(err.message || 'Error al procesar el pedido');
         } finally {
             setLoading(false);
         }

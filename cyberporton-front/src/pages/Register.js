@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerUser } from '../redux/slices/userSlice';
+import { registerUser, clearError } from '../redux/slices/userSlice';
 import './Register.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    nombreCompleto: '',
+    nombre: '',
+    apellido: '',
     correoElectronico: '',
     contrasena: '',
-    direccion: '',
-    telefono: '',
+    telefono: ''
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,25 +33,40 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(registerUser(formData));
-    if (result.type.endsWith('/fulfilled')) {
-      navigate('/login');
+    try {
+      const result = await dispatch(registerUser(formData));
+      if (result.type.endsWith('/fulfilled')) {
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error al registrar:', error);
     }
   };
 
   return (
     <div className="register-container">
       <div className="register-form">
-        <h1>Crear Cuenta</h1>
+        <h1>Registro</h1>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="nombreCompleto">Nombre Completo</label>
+            <label htmlFor="nombre">Nombre</label>
             <input
               type="text"
-              id="nombreCompleto"
-              name="nombreCompleto"
-              value={formData.nombreCompleto}
+              id="nombre"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="apellido">Apellido</label>
+            <input
+              type="text"
+              id="apellido"
+              name="apellido"
+              value={formData.apellido}
               onChange={handleChange}
               required
             />
@@ -73,17 +94,6 @@ const Register = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>
-            <input
-              type="text"
-              id="direccion"
-              name="direccion"
-              value={formData.direccion}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="telefono">Teléfono</label>
             <input
               type="tel"
@@ -96,7 +106,7 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="register-button"
+            className="login-button"
             disabled={status === 'loading'}
           >
             {status === 'loading' ? 'Registrando...' : 'Registrarse'}
