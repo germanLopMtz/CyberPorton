@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { fetchUserOrders } from '../redux/slices/ordersSlice';
+import { Link } from 'react-router-dom';
 import './Orders.css';
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const { orders, status, error } = useSelector((state) => state.orders);
+  const { orders, status } = useSelector((state) => state.orders);
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -15,7 +15,8 @@ const Orders = () => {
     }
   }, [dispatch, user]);
 
-  const ordersList = Array.isArray(orders) ? orders : [];
+  // DEBUG: Verifica qué pedidos llegan
+  console.log('Pedidos recibidos:', orders);
 
   if (!user) {
     return (
@@ -31,22 +32,10 @@ const Orders = () => {
   }
 
   if (status === 'loading') {
-    return (
-      <div className="orders-container">
-        <div className="loading">Cargando pedidos...</div>
-      </div>
-    );
+    return <div>Cargando pedidos...</div>;
   }
 
-  if (status === 'failed') {
-    return (
-      <div className="orders-container">
-        <div className="error">Error: {error}</div>
-      </div>
-    );
-  }
-
-  if (ordersList.length === 0) {
+  if (!orders || orders.length === 0) {
     return (
       <div className="orders-container">
         <div className="no-orders">
@@ -63,38 +52,13 @@ const Orders = () => {
     <div className="orders-container">
       <h1>Mis Pedidos</h1>
       <div className="orders-list">
-        {ordersList.map((order) => (
+        {orders.map((order) => (
           <div key={order.id} className="order-card">
-            <div className="order-header">
-              <h3>Pedido #{order.id}</h3>
-              <span className={`order-status ${(order.estado || '').toLowerCase()}`}>
-                {order.estado || 'Pendiente'}
-              </span>
-            </div>
-
-            <div className="order-details">
-              <p>Fecha: {new Date(order.fechaPedido).toLocaleDateString()}</p>
-              <p>Total: ${order.total.toFixed(2)}</p>
-            </div>
-
-            {Array.isArray(order.detalles) && order.detalles.length > 0 && (
-              <div className="order-items">
-                {order.detalles.map((item, idx) => (
-                  <div key={idx} className="order-item">
-                    <div className="item-info">
-                      <h4>{item.nombreProducto}</h4>
-                      <p>Cantidad: {item.cantidad}</p>
-                      <p>Precio unitario: ${item.precioUnitario}</p>
-                      <p>Subtotal: ${item.subtotal}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <Link to={`/pedidos/${order.id}`} className="view-order">
-              Ver Detalles
-            </Link>
+            <h3>Pedido #{order.id}</h3>
+            <p>Fecha: {new Date(order.fechaPedido).toLocaleDateString()}</p>
+            <p>Total: ${order.total.toFixed(2)}</p>
+            <p>Estado: {order.estado || 'Pendiente'}</p>
+            {/* Renderiza detalles aquí */}
           </div>
         ))}
       </div>

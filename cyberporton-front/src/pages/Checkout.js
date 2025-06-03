@@ -173,9 +173,11 @@ function Checkout() {
                     </div>
 
                     {error && (
-                        <div className="error-message">
-                            {error}
-                        </div>
+                      <div className="error-message">
+                        {typeof error === 'object' && error !== null
+                          ? error.mensaje || JSON.stringify(error)
+                          : error}
+                      </div>
                     )}
 
                     <button 

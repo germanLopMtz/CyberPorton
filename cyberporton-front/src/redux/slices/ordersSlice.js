@@ -32,9 +32,6 @@ export const fetchUserOrders = createAsyncThunk(
       const response = await axios.get(`${API_URL}/Pedidos/usuario/${userId}`, { 
         headers: getAuthHeaders() 
       });
-      
-      console.log('Respuesta de fetchUserOrders:', response.data);
-      // Asegurarse de que la respuesta sea un array
       const orders = response.data;
       return Array.isArray(orders) ? orders : [];
     } catch (err) {
@@ -47,7 +44,7 @@ export const fetchUserOrders = createAsyncThunk(
 const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
-    ordersList: [],
+    orders: [], // CAMBIA ordersList por orders
     currentOrder: null,
     status: 'idle',
     error: null,
@@ -56,8 +53,6 @@ const ordersSlice = createSlice({
     clearOrders: (state) => {
       state.orders = [];
       state.currentOrder = null;
-      state.status = 'idle';
-      state.error = null;
     }
   },
   extraReducers: (builder) => {
