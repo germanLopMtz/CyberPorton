@@ -49,11 +49,12 @@ function Checkout() {
                 }))
             };
 
-            const pedidoResponse = await apiService.crearPedido(pedidoData);
+            const response = await apiService.crearPedido(pedidoData);
 
-            if (pedidoResponse && pedidoResponse.data && pedidoResponse.data.id) {
+            if (response && response.data && response.data.id) {
+                // Crear el pago
                 const pagoData = {
-                    pedidoId: pedidoResponse.data.id,
+                    pedidoId: response.data.id,
                     metodoPago: metodoPago,
                     monto: total
                 };
@@ -68,7 +69,7 @@ function Checkout() {
                 throw new Error('Error al procesar el pedido');
             }
         } catch (err) {
-            setError(err.response?.data?.mensaje || 'Error al procesar el pedido');
+            setError(err.response?.data?.message || 'Error al procesar el pedido');
         } finally {
             setLoading(false);
         }

@@ -10,7 +10,7 @@ const Orders = () => {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.id) {
       dispatch(fetchUserOrders(user.id));
     }
   }, [dispatch, user]);
@@ -67,8 +67,8 @@ const Orders = () => {
           <div key={order.id} className="order-card">
             <div className="order-header">
               <h3>Pedido #{order.id}</h3>
-              <span className={`order-status ${order.estado.toLowerCase()}`}>
-                {order.estado}
+              <span className={`order-status ${(order.estado || '').toLowerCase()}`}>
+                {order.estado || 'Pendiente'}
               </span>
             </div>
 
