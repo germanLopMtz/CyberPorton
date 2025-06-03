@@ -27,19 +27,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
-    const userData = {
-      nombreCompleto: formData.nombreCompleto,
-      correoElectronico: formData.correoElectronico,
-      contrasena: formData.contrasena,
-      direccion: formData.direccion,
-      telefono: formData.telefono,
-    };
-
-    const result = await dispatch(registerUser(userData));
+    const result = await dispatch(registerUser(formData));
     if (result.type.endsWith('/fulfilled')) {
-      navigate('/');
+      navigate('/login');
     }
   };
 
@@ -47,16 +37,10 @@ const Register = () => {
     <div className="register-container">
       <div className="register-form">
         <h1>Crear Cuenta</h1>
-        
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-
+        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="nombre">Nombre Completo</label>
+            <label htmlFor="nombreCompleto">Nombre Completo</label>
             <input
               type="text"
               id="nombreCompleto"
@@ -66,9 +50,8 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="form-group">
-            <label htmlFor="email">Correo Electrónico</label>
+            <label htmlFor="correoElectronico">Correo Electrónico</label>
             <input
               type="email"
               id="correoElectronico"
@@ -78,9 +61,8 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="contrasena">Contraseña</label>
             <input
               type="password"
               id="contrasena"
@@ -90,9 +72,8 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>        
+            <label htmlFor="direccion">Dirección</label>
             <input
               type="text"
               id="direccion"
@@ -102,7 +83,6 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="telefono">Teléfono</label>
             <input
@@ -114,7 +94,6 @@ const Register = () => {
               required
             />
           </div>
-
           <button
             type="submit"
             className="register-button"
@@ -123,14 +102,12 @@ const Register = () => {
             {status === 'loading' ? 'Registrando...' : 'Registrarse'}
           </button>
         </form>
-
         <p className="login-link">
-          ¿Ya tienes una cuenta?{' '}
-          <Link to="/login">Inicia sesión aquí</Link>
+          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default Register; 
+export default Register;

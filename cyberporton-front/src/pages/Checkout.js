@@ -56,7 +56,8 @@ function Checkout() {
             
             if (response && response.data) {
                 dispatch(limpiarCarrito());
-                navigate(`/pedidos/${response.data.id}`);
+                // Redirige a la lista de pedidos, no al detalle
+                navigate('/pedidos');
             } else {
                 throw new Error('Error al procesar el pedido');
             }
@@ -178,4 +179,4 @@ function Checkout() {
     );
 }
 
-export default Checkout; 
+export default Checkout;

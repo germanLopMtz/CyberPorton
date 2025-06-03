@@ -6,7 +6,7 @@ import './Orders.css';
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const { orders, status, error } = useSelector((state) => state.orders);
+  const { orders = [], status, error } = useSelector((state) => state.orders);
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const Orders = () => {
     );
   }
 
-  if (orders.length === 0) {
+  if ((orders ?? []).length === 0) {
     return (
       <div className="orders-container">
         <div className="no-orders">
@@ -62,7 +62,7 @@ const Orders = () => {
       <h1>Mis Pedidos</h1>
       
       <div className="orders-list">
-        {orders.map((order) => (
+        {(orders ?? []).map((order) => (
           <div key={order.id} className="order-card">
             <div className="order-header">
               <h3>Pedido #{order.id}</h3>
@@ -99,4 +99,4 @@ const Orders = () => {
   );
 };
 
-export default Orders; 
+export default Orders;

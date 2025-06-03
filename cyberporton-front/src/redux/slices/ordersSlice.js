@@ -55,4 +55,4 @@ const ordersSlice = createSlice({
   },
 });
 
-export default ordersSlice.reducer; 
+export default ordersSlice.reducer;
