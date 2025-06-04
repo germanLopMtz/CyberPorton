@@ -30,15 +30,13 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: null,
-    token: localStorage.getItem('token'),
     status: 'idle',
     error: null,
   },
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
-      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     },
     clearError: (state) => {
       state.error = null;
@@ -53,8 +51,7 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
-        state.token = action.payload.token;
-        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
@@ -67,8 +64,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
-        state.token = action.payload.token;
-        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
@@ -78,4 +74,4 @@ const userSlice = createSlice({
 });
 
 export const { logout, clearError } = userSlice.actions;
-export default userSlice.reducer; 
+export default userSlice.reducer;

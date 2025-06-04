@@ -16,6 +16,7 @@ import Checkout from './pages/Checkout';
 import CreateProduct from './pages/CreateProduct';
 import CreateCategory from './pages/CreateCategory';
 import EditProduct from './pages/EditProduct';
+import Perfil from './pages/Perfil';
 
 // Componentes
 import Navbar from './components/Navbar';
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/pedidos" element={<Orders />} />
                 <Route path="/pedidos/:id" element={<OrderDetail />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/perfil" element={<Perfil />} />
               </Routes>
             </main>
             <Footer />
